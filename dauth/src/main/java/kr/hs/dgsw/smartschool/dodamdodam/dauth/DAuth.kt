@@ -40,7 +40,7 @@ object DAuth {
     private lateinit var clientSecret: String
     private lateinit var redirectUrl: String
 
-    private lateinit var register: ActivityResultLauncher<Intent>
+    private var register: ActivityResultLauncher<Intent>? = null
 
     private fun <T> checkError(response: Response<T>): T {
         if (response.isSuccessful.not()) {
@@ -115,7 +115,7 @@ object DAuth {
         crossinline action: () -> Unit,
     ) {
         if (isInstalled) {
-            register.launch(intent)
+            register?.launch(intent)
             action.invoke()
         } else {
             event(Event.FailureEvent(Throwable("도담도담을 설치해주세요")))
@@ -160,6 +160,10 @@ object DAuth {
                     )
                 }
             }
+    }
+
+    fun exitDAuth() {
+        register = null
     }
 
     fun loginWithDodam(
