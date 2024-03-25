@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +25,7 @@ import kr.hs.dgsw.smartschool.dodamdodam.dauth.model.response.RefreshTokenRespon
 import kr.hs.dgsw.smartschool.dodamdodam.dauth.model.response.TokenResponse
 import kr.hs.dgsw.smartschool.dodamdodam.dauth.model.response.UserResponse
 import kr.hs.dgsw.smartschool.dodamdodam.dauth.util.Constants
+import kr.hs.dgsw.smartschool.dodamdodam.dauth.util.getLifeCycleOwner
 import kr.hs.dgsw.smartschool.dodamdodam.dauth.util.repeatOnStarted
 import org.json.JSONObject
 import retrofit2.Response
@@ -171,7 +173,7 @@ object DAuth {
         onSuccess: (TokenResponse) -> Unit,
         onFailure: (Throwable) -> Unit,
     ) = lunch(context) {
-        (context as LifecycleOwner).repeatOnStarted {
+        context.getLifeCycleOwner()?.repeatOnStarted {
             eventFlow.collect { event ->
                 when (event) {
                     is Event.SuccessAccountEvent -> login(
